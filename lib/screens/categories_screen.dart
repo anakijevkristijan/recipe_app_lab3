@@ -5,6 +5,7 @@ import '../models/meal_detail.dart';
 import '../widgets/category_card.dart';
 import 'meals_screen.dart';
 import 'meal_detail_screen.dart';
+import 'favorites_screen.dart';
 
 class CategoriesScreen extends StatefulWidget {
   const CategoriesScreen({Key? key}) : super(key: key);
@@ -35,6 +36,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
       });
     } catch (e) {
       print(e);
+      setState(() => isLoading = false);
     }
   }
 
@@ -57,7 +59,9 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
         ),
       );
     } catch (e) {
-      print("Error fetching random meal");
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Error fetching random meal")),
+      );
     }
   }
 
@@ -65,8 +69,18 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Рецепти - Категории'),
+        title: const Text('Categories'),
         actions: [
+          IconButton(
+            icon: const Icon(Icons.favorite),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const FavoritesScreen()),
+              );
+            },
+            tooltip: 'Омилени',
+          ),
           IconButton(
             icon: const Icon(Icons.shuffle),
             onPressed: openRandomRecipe,
@@ -80,7 +94,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
             padding: const EdgeInsets.all(8.0),
             child: TextField(
               decoration: const InputDecoration(
-                labelText: 'Пребарај категории',
+                labelText: 'Search Categories',
                 border: OutlineInputBorder(),
                 prefixIcon: Icon(Icons.search),
               ),

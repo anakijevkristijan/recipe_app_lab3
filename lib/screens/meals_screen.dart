@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../services/api_service.dart';
 import '../models/meal.dart';
+import '../widgets/meal_grid_item.dart';
 import 'meal_detail_screen.dart';
 
 class MealsScreen extends StatefulWidget {
@@ -34,6 +35,7 @@ class _MealsScreenState extends State<MealsScreen> {
       });
     } catch (e) {
       print(e);
+      setState(() => isLoading = false);
     }
   }
 
@@ -49,14 +51,14 @@ class _MealsScreenState extends State<MealsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Јадења: ${widget.category}')),
+      appBar: AppBar(title: Text(widget.category)),
       body: Column(
         children: [
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: TextField(
               decoration: const InputDecoration(
-                labelText: 'Пребарај јадења',
+                labelText: 'Search Meals',
                 border: OutlineInputBorder(),
                 prefixIcon: Icon(Icons.search),
               ),
@@ -77,7 +79,8 @@ class _MealsScreenState extends State<MealsScreen> {
               itemCount: filteredMeals.length,
               itemBuilder: (context, index) {
                 final meal = filteredMeals[index];
-                return GestureDetector(
+                return MealGridItem(
+                  meal: meal,
                   onTap: () {
                     Navigator.push(
                       context,
@@ -87,16 +90,6 @@ class _MealsScreenState extends State<MealsScreen> {
                       ),
                     );
                   },
-                  child: GridTile(
-                    footer: GridTileBar(
-                      backgroundColor: Colors.black54,
-                      title: Text(
-                        meal.name,
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                    child: Image.network(meal.thumbnail, fit: BoxFit.cover),
-                  ),
                 );
               },
             ),
